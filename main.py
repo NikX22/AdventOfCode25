@@ -1,5 +1,6 @@
 # This is a sample Python script.
 from itertools import count
+from math import prod
 from shlex import split
 
 
@@ -8,6 +9,9 @@ from shlex import split
 
 import numpy as np
 from itertools import chain
+
+from matplotlib import lines
+
 
 def decode():
     prev_dial = 50
@@ -293,7 +297,45 @@ def nachhilfe():
         print("result", sum(results))
 
 
+def nachnachhilfe():
+    with open("homework.txt") as homework:
+        lines = homework.read().split("\n")
+        #print("lines", lines.count("\n"))
+        #lines = lines.split("\n")
 
+        max_line_length = 0
+        for line in lines:
+            if len(line) > max_line_length:
+                max_line_length = len(line)
+        print("max_line_length", max_line_length)
+
+        for i in range(len(lines)):
+            if len(lines[i]) < max_line_length:
+                for _ in range(max_line_length - len(lines[i])):
+                    lines[i] += " "
+        #print(lines)
+
+        results = []
+        temp = []
+        for i in range(len(lines[0]) - 1, -1, -1):
+            num = ""
+            for j in range(len(lines)):
+                num += lines[j][i]
+
+            if num.strip(' ') == "":
+                temp = []
+            else:
+                if num[-1] == ' ':
+                    temp.append(int(num))
+                elif num[-1] == '+':
+                    temp.append(int(num[:-1]))
+                    results.append(sum(temp))
+                elif num[-1] == '*':
+                    temp.append(int(num[:-1]))
+                    results.append(prod(temp))
+
+        print("results", results)
+        print("result", sum(results))
 
 
 
@@ -308,6 +350,7 @@ if __name__ == '__main__':
     #paper_rolls_transport()
     #fridge_check()
     #fridge_check2()
-    nachhilfe()
+    #nachhilfe()
+    nachnachhilfe()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
