@@ -258,6 +258,39 @@ def fridge_check2():
             fresh_count += r[1] - r[0] + 1
     print("fresh_count", fresh_count)
 
+def nachhilfe():
+    with open("homework.txt") as homework:
+        lines = homework.read()#.split("\n")
+        print("lines", lines.count("\n"))
+        lines = lines.split("\n")
+        print("lines", len(lines))
+        print(lines[0])
+        for i in range(len(lines)):
+            line = lines[i].split(" ")
+            while True:
+                try:
+                    line.remove('')
+                except ValueError:
+                    break
+            lines[i] = line
+
+        print("lines", lines)
+        print("lines", len(lines))
+
+        results = []
+        for i in range(len(lines[0])):
+            result = 0
+            if lines[-1][i] == '+':
+                for j in range(len(lines) - 1):
+                    result += int(lines[j][i])
+            elif lines[-1][i] == '*':
+                result += 1
+                for j in range(len(lines) - 1):
+                    result *= int(lines[j][i])
+            results.append(result)
+
+        print("results", results)
+        print("result", sum(results))
 
 
 
@@ -274,6 +307,7 @@ if __name__ == '__main__':
     #paper_rolls()
     #paper_rolls_transport()
     #fridge_check()
-    fridge_check2()
+    #fridge_check2()
+    nachhilfe()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
