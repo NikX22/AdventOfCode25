@@ -363,6 +363,81 @@ def galaxy_eyes_tachyon_tree():
                 print(row)
         print("splits", splits)
 
+def neo_galaxy_eyes_tachyon_tree():
+    with open("manifold.txt") as manifold:
+        rows = manifold.read().split("\n")
+        beams = {rows[0].find("S")}
+        for i in range(len(rows)):
+            rows[i] = list(rows[i])
+            for j in range(len(rows[i])):
+                if rows[i][j] == ".":
+                    rows[i][j] = 0
+
+
+
+
+        # place first beams after start S
+        if rows[1][list(beams)[0]] == 0:
+            rows[1][list(beams)[0]] = 1
+        elif rows[1][list(beams)[0]] == "^":
+            idx = list(beams)[0]
+            rows[1][idx - 1] = 1
+            rows[1][idx + 1] = 1
+            beams.clear()
+            beams.add(idx - 1)
+            beams.add(idx + 1)
+
+
+        timelines = 0
+        for i in range(2, len(rows)):
+            new_beams = set([])
+            for idx in beams:
+                if rows[i][idx] == "^":
+                    rows[i][idx - 1] += rows[i - 1][idx]
+                    rows[i][idx + 1] += rows[i - 1][idx]
+                    new_beams.add(idx - 1)
+                    new_beams.add(idx + 1)
+                else:
+                    rows[i][idx] += rows[i - 1][idx]
+                    new_beams.add(idx)
+            #print("new_beams", new_beams)
+            beams = new_beams
+
+        timelines = sum(rows[-1])
+
+        for i in range(len(rows)):
+            rows[i] = list(rows[i])
+            for j in range(len(rows[i])):
+                if rows[i][j] == 0:
+                    rows[i][j] = '.'
+                else:
+                    rows[i][j] = str(rows[i][j])
+        for row in rows:
+            print("".join(row))
+
+
+        print("timelines", timelines)
+
+
+"""
+.......S.......
+.......1.......
+......1^1......
+......1.1......
+.....1^2^1.....
+.....1.2.1.....
+....1^3^3^1....
+....1.3.3.1....
+...1^4^331^1...
+...1.4.331.1...
+..1^5^434^2^1..
+..1.5.434.2.1..
+.1^154^74.21^1.
+.1.154.74.21.1.
+1^2^A^B^B^211^1
+...............
+"""
+
 
 
 
@@ -379,6 +454,7 @@ if __name__ == '__main__':
     #fridge_check2()
     #nachhilfe()
     #nachnachhilfe()
-    galaxy_eyes_tachyon_tree()
+    #galaxy_eyes_tachyon_tree()
+    neo_galaxy_eyes_tachyon_tree()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
