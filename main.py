@@ -338,6 +338,33 @@ def nachnachhilfe():
         print("result", sum(results))
 
 
+def galaxy_eyes_tachyon_tree():
+    with open("manifold.txt") as manifold:
+        rows = manifold.read().split("\n")
+
+        beams = {rows[0].find("S")}
+
+        splits = 0
+        for i in range(1, len(rows)):
+            new_beams = set([])
+            for idx in beams:
+                if rows[i][idx] == ".":
+                    rows[i] = rows[i][:idx] + "|" + rows[i][idx+1:]
+                    new_beams.add(idx)
+                elif rows[i][idx] == "^":
+                    rows[i] = rows[i][:idx - 1] + "|^|" + rows[i][idx+2:]
+                    splits += 1
+                    new_beams.add(idx - 1)
+                    new_beams.add(idx + 1)
+            print("splits", splits)
+            #print("new_beams", new_beams)
+            beams = new_beams
+            for row in rows:
+                print(row)
+        print("splits", splits)
+
+
+
 
 
 # Press the green button in the gutter to run the script.
@@ -351,6 +378,7 @@ if __name__ == '__main__':
     #fridge_check()
     #fridge_check2()
     #nachhilfe()
-    nachnachhilfe()
+    #nachnachhilfe()
+    galaxy_eyes_tachyon_tree()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
