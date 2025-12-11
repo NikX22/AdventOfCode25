@@ -1,6 +1,7 @@
 # This is a sample Python script.
+from collections import Counter
 from itertools import count
-from math import prod
+from math import prod, sqrt
 from shlex import split
 
 
@@ -11,6 +12,7 @@ import numpy as np
 from itertools import chain
 
 from matplotlib import lines
+from scipy.spatial.distance import euclidean
 
 
 def decode():
@@ -419,27 +421,64 @@ def neo_galaxy_eyes_tachyon_tree():
         print("timelines", timelines)
 
 
-"""
-.......S.......
-.......1.......
-......1^1......
-......1.1......
-.....1^2^1.....
-.....1.2.1.....
-....1^3^3^1....
-....1.3.3.1....
-...1^4^331^1...
-...1.4.331.1...
-..1^5^434^2^1..
-..1.5.434.2.1..
-.1^154^74.21^1.
-.1.154.74.21.1.
-1^2^A^B^B^211^1
-...............
-"""
+def varta_volkssturm():
+    with open("junctions.txt") as junctions:
+        rows = junctions.read().split("\n")
+        coordinates = []
+        circuits = []
+        for i in range(len(rows)):
+            x, y, z = rows[i].split(",")
+            coordinates.append([int(x), int(y), int(z)])
+            circuits.append(-1)
 
 
+        connections = dict()
+        for i in range(len(coordinates)):
+            for j in range(i, len(coordinates)):
+                if i != j:
+                    dist = euclidean(coordinates[j], coordinates[i])#sqrt(sum([(coordinates[j][k] - coordinates[i][k]) ** 2 for k in range(3)]))
+                    connections[f"{i},{j}"] = dist
 
+        print("connections", list(connections.values()).index(min(connections.values())))
+        #print(sorted(list(connections.items()), key=lambda x: x[1]))
+        print(len(list(connections.values())))
+        print(len(set(connections.values())))
+
+        checked_junctions = set()
+
+        loops = -1
+        n = 1000 # number of shortest connections to make
+        for i in range(n):
+            min_con = min(connections.values())
+            min_con_idx = list(connections.values()).index(min_con)
+            min_con_key = list(connections.keys())[min_con_idx]
+            connections.pop(min_con_key)
+            #print(list(connections.items()))
+
+            coord_idx1, coord_idx2 = min_con_key.split(",")
+            coord_idx1 = int(coord_idx1)
+            coord_idx2 = int(coord_idx2)
+            #print(coordinates[coord_idx1], coordinates[coord_idx2])
+            if coord_idx1 in checked_junctions and coord_idx2 in checked_junctions:
+                old_id = 0 + circuits[coord_idx2]
+                for j in range(len(circuits)):
+                    if circuits[j] == old_id:
+                        circuits[j] = circuits[coord_idx1]
+            elif coord_idx2 in checked_junctions:
+                circuits[coord_idx1] = circuits[coord_idx2]
+            elif coord_idx1 in checked_junctions:
+                circuits[coord_idx2] = circuits[coord_idx1]
+            else:
+                loops += 1
+                circuits[coord_idx1] = loops
+                circuits[coord_idx2] = loops
+            checked_junctions.add(coord_idx1)
+            checked_junctions.add(coord_idx2)
+            #print(checked_junctions)
+            #print(i, circuits)
+            #print(i, [x for x in range(len(circuits))])
+            #print(Counter(circuits))
+        print(Counter(circuits))
 
 
 # Press the green button in the gutter to run the script.
@@ -455,6 +494,7 @@ if __name__ == '__main__':
     #nachhilfe()
     #nachnachhilfe()
     #galaxy_eyes_tachyon_tree()
-    neo_galaxy_eyes_tachyon_tree()
+    #neo_galaxy_eyes_tachyon_tree()
+    varta_volkssturm()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
