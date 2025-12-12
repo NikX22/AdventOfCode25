@@ -447,8 +447,10 @@ def varta_volkssturm():
         checked_junctions = set()
 
         loops = -1
+        max_count = 0
         n = 1000 # number of shortest connections to make
-        for i in range(n):
+        #for i in range(n):
+        while max_count < len(coordinates):
             min_con = min(connections.values())
             min_con_idx = list(connections.values()).index(min_con)
             min_con_key = list(connections.keys())[min_con_idx]
@@ -474,11 +476,15 @@ def varta_volkssturm():
                 circuits[coord_idx2] = loops
             checked_junctions.add(coord_idx1)
             checked_junctions.add(coord_idx2)
-            #print(checked_junctions)
-            #print(i, circuits)
-            #print(i, [x for x in range(len(circuits))])
-            #print(Counter(circuits))
+            max_counter = Counter(circuits)
+            try:
+                max_counter.pop(-1)
+            except KeyError:
+                pass
+            max_count = Counter(circuits).most_common(1)[0][1]
+            #print(max_count)
         print(Counter(circuits))
+        print(coordinates[coord_idx1], coordinates[coord_idx2])
 
 
 # Press the green button in the gutter to run the script.
