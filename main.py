@@ -486,6 +486,22 @@ def varta_volkssturm():
         print(Counter(circuits))
         print(coordinates[coord_idx1], coordinates[coord_idx2])
 
+def cinema():
+    with open("tiles.txt") as file:
+        red_tiles = file.read().split("\n")
+        for i in range(len(red_tiles)):
+            x, y = red_tiles[i].split(",")
+            red_tiles[i] = [int(x), int(y)]
+        max_square_size = 0
+        for tile1 in red_tiles:
+            for tile2 in red_tiles:
+                square_size = (abs(tile1[0] - tile2[0]) + 1) * (abs(tile1[1] - tile2[1]) + 1)
+                if square_size > max_square_size:
+                    max_square_size = square_size
+        print(max_square_size)
+
+
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -501,6 +517,8 @@ if __name__ == '__main__':
     #nachnachhilfe()
     #galaxy_eyes_tachyon_tree()
     #neo_galaxy_eyes_tachyon_tree()
-    varta_volkssturm()
+    #varta_volkssturm()
+    #cinema()
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
