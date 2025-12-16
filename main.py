@@ -500,7 +500,115 @@ def cinema():
                     max_square_size = square_size
         print(max_square_size)
 
+def absolute_cinema():
+    with open("tiles.txt") as file:
+        red_tiles = file.read().split("\n")
+        #print(red_tiles)
+        x_min, y_min = red_tiles[0].split(",")
+        x_min = int(x_min)
+        y_min = int(y_min)
+        x_max, y_max = red_tiles[0].split(",")
+        x_max = int(x_max)
+        y_max = int(y_max)
+        for i in range(len(red_tiles)):
+            x, y = red_tiles[i].split(",")
+            ix = int(x)
+            iy = int(y)
+            red_tiles[i] = [ix, iy]
 
+            if ix < x_min:
+                x_min = ix
+            elif ix > x_max:
+                x_max = ix
+            if iy < y_min:
+                y_min = iy
+            elif iy > y_max:
+                y_max = iy
+
+        for i in range(len(red_tiles)):
+            red_tiles[i][0] -= x_min
+            red_tiles[i][1] -= y_min
+        x_max -= x_min
+        x_min = 0
+        y_max -= y_min
+        y_min = 0
+        print(x_min, y_min, x_max, y_max)
+
+        floor = []
+        #filler = '.'
+        print("building mat")
+        for i in range(y_max+1):
+            col = []
+            for j in range(x_max+1):
+                col.append('.')
+                #if [i, j] in red_tiles:
+                #    col.append('#')
+                #    if filler == '.':
+                #        filler = 'X'
+                #    else:
+                #        filler = '.'
+                #else:
+                #    col.append(filler)
+            floor.append(col)
+            #filler = '.'
+        print("mat finished")
+
+        print(len(floor), len(floor[0]))
+        for tile in red_tiles:
+            #print(tile)
+            floor[tile[1]][tile[0]] = '#'
+
+        print("drawing 1")
+        green_active = False
+        for i in range(len(floor)):
+            for j in range(len(floor[i])):
+                if floor[i][j] == '#':
+                    green_active = (not green_active)
+                elif green_active:
+                    floor[i][j] = 'X'
+
+        print("drawing 2")
+        for j in range(len(floor[0])):
+            #lock = False
+            fill_start = -1
+            for i in range(len(floor)):
+                if (floor[i][j] == '#' or floor[i][j] == 'X') and fill_start == -1:
+                    fill_start = i
+                elif (floor[i][j] == '#' or floor[i][j] == 'X') and fill_start != -1:
+                    for fill_idx in range(fill_start+1, i):
+                        if floor[fill_idx][j] == '.':
+                            floor[fill_idx][j] = 'X'
+
+                #if (floor[i][j] == '#' or floor[i][j] == 'X') and not lock:
+                #    green_active = not green_active
+                #    lock = True
+                #elif green_active and floor[i][j] == '.':
+                #    floor[i][j] = 'X'
+                #    lock = False
+            #green_active = False
+
+        #for i in range(len(floor)):
+        #    print(floor[i])
+
+        max_square_size = 0
+        for tile1 in red_tiles:
+            for tile2 in red_tiles:
+                for j in range(min(tile1[0], tile2[0]), max(tile1[0], tile2[0])):
+                    for i in range(min(tile1[1], tile2[1]), max(tile1[1], tile2[1])):
+                        if floor[i][j] == '.':
+                            break
+                    else: continue
+                    break
+                else:
+                    square_size = (abs(tile1[0] - tile2[0]) + 1) * (abs(tile1[1] - tile2[1]) + 1)
+                    if square_size > max_square_size:
+                        max_square_size = square_size
+                    continue
+                break
+
+        print(max_square_size)
+        print(red_tiles)
+        print(min(red_tiles ))
 
 
 # Press the green button in the gutter to run the script.
@@ -519,6 +627,6 @@ if __name__ == '__main__':
     #neo_galaxy_eyes_tachyon_tree()
     #varta_volkssturm()
     #cinema()
-
+    absolute_cinema()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
