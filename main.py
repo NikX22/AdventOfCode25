@@ -2,9 +2,8 @@
 from collections import Counter
 from itertools import count
 from math import prod, sqrt
-from shlex import split
 
-
+import matplotlib.pyplot
 # Press Umschalt+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
@@ -610,6 +609,64 @@ def absolute_cinema():
         print(red_tiles)
         print(min(red_tiles ))
 
+def absolute_cinema2():
+    with open("tiles.txt") as file:
+        str_tiles = file.read().split("\n")
+        red_tiles = []
+        print("convert to int")
+        for i in range(len(str_tiles)):
+            x, y = str_tiles[i].split(",")
+            red_tiles.append([int(x), int(y)])
+
+        #matplotlib.pyplot.plot(np.array(red_tiles)[:, 0], np.array(red_tiles)[:, 1], marker='', linestyle='-')
+        #matplotlib.pyplot.show()
+
+
+        #for i in range(len(red_tiles)):
+        #    neighbors = [red_tiles[i-1], red_tiles[i+1%len(red_tiles)]]
+        #    tile = red_tiles[i]
+        #    edge_type = 0
+        #    for neighbor in neighbors:
+        #        if tile[0] - neighbor[0] < 0:
+        #            edge_type += 1
+        #        if tile[1] - neighbor[1] < 0:
+        #            edge_type += 2
+        #    red_tiles[i].append(edge_type)
+
+        print("check tile pairs")
+        max_square_size = 0
+        for i in range(len(red_tiles)):
+            print(red_tiles[i])
+            for j in range(i+1, len(red_tiles)):
+                square_size = (abs(red_tiles[i][0] - red_tiles[j][0]) + 1) * (abs(red_tiles[i][1] - red_tiles[j][1]) + 1)
+                if square_size > max_square_size:
+                    x_range = list(sorted([red_tiles[i][0], red_tiles[j][0]]))
+                    y_range = list(sorted([red_tiles[i][1], red_tiles[j][1]]))
+                    for k in range(len(red_tiles)):
+                        tile = red_tiles[k]
+
+                        # check if tile on corners
+                        if tile == red_tiles[i] or tile == red_tiles[j] or tile == [red_tiles[i][0], red_tiles[j][1]] or tile == [red_tiles[j][0], red_tiles[i][1]]:
+                            continue
+
+                        # check if tile in square
+                        if x_range[0] <= tile[0] <= x_range[1] and y_range[0] <= tile[1] <= y_range[1]:
+                            break
+                        # check if tile left of square
+                        elif tile[0] < x_range[0]:
+                            neighbors = [red_tiles[k - 1], red_tiles[(k + 1) % len(red_tiles)]]
+                            if x_range[1] < neighbors[0][0] or x_range[1] < neighbors[1][0]:
+                                break
+                        # check if tile above square
+                        elif tile[1] < y_range[0]:
+                            neighbors = [red_tiles[k - 1], red_tiles[(k + 1) % len(red_tiles)]]
+                            if x_range[1] < neighbors[0][1] or x_range[1] < neighbors[1][1]:
+                                break
+                    else:
+                        max_square_size = max(max_square_size, square_size)
+
+        print(max_square_size)
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -627,6 +684,7 @@ if __name__ == '__main__':
     #neo_galaxy_eyes_tachyon_tree()
     #varta_volkssturm()
     #cinema()
-    absolute_cinema()
+    #absolute_cinema()
+    absolute_cinema2()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
