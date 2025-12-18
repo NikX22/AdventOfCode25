@@ -610,7 +610,7 @@ def absolute_cinema():
         print(min(red_tiles ))
 
 def absolute_cinema2():
-    with open("tiles.txt") as file:
+    with open("tiles_test.txt") as file:
         str_tiles = file.read().split("\n")
         red_tiles = []
         print("convert to int")
@@ -621,22 +621,10 @@ def absolute_cinema2():
         #matplotlib.pyplot.plot(np.array(red_tiles)[:, 0], np.array(red_tiles)[:, 1], marker='', linestyle='-')
         #matplotlib.pyplot.show()
 
-
-        #for i in range(len(red_tiles)):
-        #    neighbors = [red_tiles[i-1], red_tiles[i+1%len(red_tiles)]]
-        #    tile = red_tiles[i]
-        #    edge_type = 0
-        #    for neighbor in neighbors:
-        #        if tile[0] - neighbor[0] < 0:
-        #            edge_type += 1
-        #        if tile[1] - neighbor[1] < 0:
-        #            edge_type += 2
-        #    red_tiles[i].append(edge_type)
-
         print("check tile pairs")
         max_square_size = 0
         for i in range(len(red_tiles)):
-            print(red_tiles[i])
+            #print(red_tiles[i])
             for j in range(i+1, len(red_tiles)):
                 square_size = (abs(red_tiles[i][0] - red_tiles[j][0]) + 1) * (abs(red_tiles[i][1] - red_tiles[j][1]) + 1)
                 if square_size > max_square_size:
@@ -650,22 +638,24 @@ def absolute_cinema2():
                             continue
 
                         # check if tile in square
-                        if x_range[0] <= tile[0] <= x_range[1] and y_range[0] <= tile[1] <= y_range[1]:
+                        if x_range[0] <= tile[0] <= x_range[1] and y_range[0] <= tile[1] <= y_range[1]: # TODO: this could falsely disqualify points on square edges
                             break
                         # check if tile left of square
-                        elif tile[0] < x_range[0]:
+                        elif tile[0] < x_range[0] and y_range[0] < tile[1] < y_range[1]:
                             neighbors = [red_tiles[k - 1], red_tiles[(k + 1) % len(red_tiles)]]
                             if x_range[1] < neighbors[0][0] or x_range[1] < neighbors[1][0]:
                                 break
                         # check if tile above square
-                        elif tile[1] < y_range[0]:
+                        elif tile[1] < y_range[0] and x_range[0] < tile[0] < x_range[1]:
                             neighbors = [red_tiles[k - 1], red_tiles[(k + 1) % len(red_tiles)]]
-                            if x_range[1] < neighbors[0][1] or x_range[1] < neighbors[1][1]:
+                            if y_range[1] < neighbors[0][1] or y_range[1] < neighbors[1][1]:
                                 break
+                        # TODO: check if square within min 4 corners
+                        elif tile[0]
                     else:
                         max_square_size = max(max_square_size, square_size)
 
-        print(max_square_size)
+        print(max_square_size) # 1363080015 too low, 4525501422 too high
 
 
 # Press the green button in the gutter to run the script.
